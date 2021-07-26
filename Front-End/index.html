@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <title>Teste de autenticação usando firebase</title>
+</header>
+
+<body>
+    <button onclick="login()">Login Google</button>
+
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-auth.js"></script>
+
+    <script>
+
+        var firebaseConfig = {
+            apiKey: "AIzaSyAnMYll2WSCzuaOF5sVx_KAoiPYeau91Xo",
+            authDomain: "[seu_app_no_firebase].firebaseapp.com",
+            projectId: "[seu_app_no_firebase]",
+            storageBucket: "[seu_app_no_firebase].appspot.com",
+            messagingSenderId: "id",
+            appId: "appid"
+        };
+
+        var user = [];
+
+        firebase.initializeApp(firebaseConfig);
+
+        var provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
+        function login() {
+            firebase.auth()
+                .signInWithPopup(provider)
+                .then(result => {
+
+                    var token = result.credential.accessToken;
+
+                    firebase.auth()
+                        .currentUser
+                        .getIdToken()
+                        .then((idToken) => {
+
+                            //JWT que vai pra api
+                            console.log(idToken);
+
+                            var name = result.user.displayName;
+                            var email = result.user.email;
+                            var token = idToken;
+
+                            console.table(result.user)
+
+
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+                });
+        }
+    </script>
+</body>
+
+</html>
